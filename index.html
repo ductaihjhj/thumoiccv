@@ -19,22 +19,16 @@
     />
     <meta property="og:locale" content="en_US" />
     <meta property="og:site_name" content="CCV Birthday Party" />
-    <meta
-      property="og:image"
-      content="https://sspark.genspark.ai/cfimages?u1=MaQosbDz48WIkBpJmU%2FoopgFk0CSyCL%2F7zSotcWyCLVeZBl2Ug50ifHJV%2BRGUcULwwXrf%2Fe0P9WC5ZAFBAIU6Oo8DZvJmgC1NBjM5hdZllUx1w9%2F5T0V4HES6EwkhF62EqkXWJuJWKogc%2BODEJxFWyIlrBbHaq77jIo5mt7pS7lNuPJxmYIUw7dj5UEOWIMid53cWK%2BWnd9jnz4px%2BK172%2BuS%2BkupqCsb4KWgO9A7nV6H2u71OU1eHVht160&u2=rtosRSvPqW5SNPr3&width=2560"
-    />
+    <meta property="og:image" content="./img/sn.jpg" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Birthday Invitation" />
+    <meta name="twitter:title" content="CCV Birthday Party" />
     <meta
       name="twitter:description"
       content="Saturday, April 11, 2026 at Duy Tan Hotel, Vinh City"
     />
-    <meta
-      name="twitter:image"
-      content="https://sspark.genspark.ai/cfimages?u1=MaQosbDz48WIkBpJmU%2FoopgFk0CSyCL%2F7zSotcWyCLVeZBl2Ug50ifHJV%2BRGUcULwwXrf%2Fe0P9WC5ZAFBAIU6Oo8DZvJmgC1NBjM5hdZllUx1w9%2F5T0V4HES6EwkhF62EqkXWJuJWKogc%2BODEJxFWyIlrBbHaq77jIo5mt7pS7lNuPJxmYIUw7dj5UEOWIMid53cWK%2BWnd9jnz4px%2BK172%2BuS%2BkupqCsb4KWgO9A7nV6H2u71OU1eHVht160&u2=rtosRSvPqW5SNPr3&width=2560"
-    />
+    <meta name="twitter:image" content="./img/sn.jpg" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -86,12 +80,12 @@
     </noscript>
 
     <!-- ====================== HERO ====================== -->
- <section class="hero" id="top" aria-label="Birthday party introduction">
-  <video class="hero-video" autoplay muted loop playsinline preload="auto">
-    <source src="./img/bg.mp4" type="video/mp4" />
-  </video>
-  <div class="hero-overlay"></div>
-  <div class="hero-content">
+    <section class="hero" id="top" aria-label="Birthday party introduction">
+      <video class="hero-video" autoplay muted loop playsinline preload="auto">
+        <source src="./img/bg.mp4" type="video/mp4" />
+      </video>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
         <h1 class="hero-title">Birthday Party</h1>
         <div class="hero-logo-wrap">
           <img src="./img/ccv.png" alt="CCV" class="hero-logo base-logo" />
@@ -101,7 +95,7 @@
         <p class="hero-venue">Duy Tan Hotel · Vinh City</p>
 
         <div class="hero-actions">
-          <p class="btn-save-date">✦ Welcome Mr. Tai ✦</p>
+          <p class="btn-save-date" id="guest-welcome">✦ Welcome Guest ✦</p>
         </div>
       </div>
     </section>
@@ -151,7 +145,10 @@
       </div>
 
       <!-- ====================== DRESS CODE ====================== -->
-      <section class="section venue-section fade-in" aria-labelledby="venue-title">
+      <section
+        class="section venue-section fade-in"
+        aria-labelledby="venue-title"
+      >
         <h2 class="section-title script" id="venue-title">Dress Code</h2>
 
         <div class="dress-code-wrap">
@@ -211,14 +208,16 @@
                 rel="noopener"
                 class="btn-filled"
               >
-                <i class="fas fa-map-marker-alt" aria-hidden="true"></i> Get Directions
+                <i class="fas fa-map-marker-alt" aria-hidden="true"></i> Get
+                Directions
               </a>
               <button
                 class="btn-outline"
                 type="button"
                 onclick="addToCalendar()"
               >
-                <i class="fas fa-calendar-plus" aria-hidden="true"></i> Add to Calendar
+                <i class="fas fa-calendar-plus" aria-hidden="true"></i> Add to
+                Calendar
               </button>
             </div>
           </div>
@@ -328,21 +327,29 @@
     </footer>
 
     <!-- ====================== FLOATING BUTTONS ====================== -->
-   <a href="#main-content" class="float-btn float-right scroll-indicator" aria-label="Scroll down">
-  <i class="fas fa-chevron-down" aria-hidden="true"></i>
-</a>
+    <a
+      href="#main-content"
+      class="float-btn float-right scroll-indicator"
+      aria-label="Scroll down"
+    >
+      <i class="fas fa-chevron-down" aria-hidden="true"></i>
+    </a>
 
     <!-- Background Music -->
     <audio id="bg-music" loop preload="none">
-      <source
-        src="./img/ms.mp3"
-        type="audio/mpeg"
-      />
+      <source src="./img/ms.mp3" type="audio/mpeg" />
     </audio>
 
     <!-- Toast -->
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+    <script>
+      window.APP_CONFIG = {
+        supabaseUrl: "https://ejdlwudfbxylgzrlzimv.supabase.co",
+        supabaseAnonKey: "sb_publishable__NU7Sde57JchonitvBYN_Q_w3xhLRc8",
+      };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="./js/main.js"></script>
   </body>
 </html>

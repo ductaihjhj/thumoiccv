@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <script>
+    window.APP_CONFIG = {
+        
+      supabaseUrl: 'https://ejdlwudfbxylgzrlzimv.supabase.co',
+      supabaseAnonKey: 'sb_publishable__NU7Sde57JchonitvBYN_Q_w3xhLRc8'
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <main class="section" style="max-width: 680px;">
+    <h1 class="section-title script">Admin Panel</h1>
+    <p class="section-subtitle">Create private invitation links for guests</p>
+
+    <div class="rsvp-form">
+      <div class="rsvp-form-group">
+        <label for="guest-name">Guest Name</label>
+        <input type="text" id="guest-name" placeholder="Mr. Tai" />
+      </div>
+
+      <div class="rsvp-form-group">
+        <label for="guest-slug">Slug</label>
+        <input type="text" id="guest-slug" placeholder="mrtai" />
+      </div>
+
+      <button class="btn-rsvp-submit" id="save-guest-btn" type="button">
+        <span>Save Guest</span>
+      </button>
+
+      <div class="rsvp-form-group" style="margin-top: 1rem;">
+        <label for="guest-link">Private Link</label>
+        <input type="text" id="guest-link" readonly />
+      </div>
+
+      <button class="btn-outline" id="copy-link-btn" type="button">Copy Link</button>
+    </div>
+
+    <div style="height: 24px;"></div>
+
+    <div class="rsvp-form">
+      <h2 style="margin-bottom: 1rem;">Guest List</h2>
+      <div id="guest-list"></div>
+    </div>
+  </main>
+
+  <script>
+    const supabaseClient = window.supabase.createClient(
+      window.APP_CONFIG.supabaseUrl,
+      window.APP_CONFIG.supabaseAnonKey
+    );
+
+    const guestNameInput = document.getElementById('guest-name');
+    const guestSlugInput = document.getElementById('guest-slug');
+    const guestLinkInput = document.getElementById('guest-link');
+    const saveGuestBtn = document.getElementById('save-guest-btn');
+    const copyLinkBtn = document.getElementById('copy-link-btn');
+    const guestList = document.getElementById('guest-list');
+
+    function slugify(value) {
+      return value
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, '')
+        .replace(/^-+|-+$/g, '');
+    }
+
+    guestNameInput.addEventListener('input', () => {
+      if (!guestSlugInput.value.trim()) {
+        guestSlugInput.value = slugify(guestNameInput.value);
+      }
+    });
+
+    function buildGuestLink(slug) {
+      return `${window.location.origin}/${slug}`;
+    }
+
+    async function loadGuests() {
+      const { data, error } = await supabaseClient
+        .from('guests')
+        .select('id, guest_name, slug')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        guestList.innerHTML = '<p>Failed to load guests.</p>';
+        return;
+      }
+
+      guestList.innerHTML = data.map(item => `
+        <div style="padding:12px 0;border-bottom:1px solid rgba(0,0,0,0.08);">
+          <strong>${item.guest_name}</strong><br />
+          <span>${buildGuestLink(item.slug)}</span>
+        </div>
+      `).join('');
+    }
+
+    saveGuestBtn.addEventListener('click', async () => {
+      const guest_name = guestNameInput.value.trim();
+      const slug = slugify(guestSlugInput.value);
+
+      if (!guest_name || !slug) {
+        alert('Please enter both guest name and slug.');
+        return;
+      }
+
+      const { error } = await supabaseClient
+        .from('guests')
+        .upsert({ guest_name, slug }, { onConflict: 'slug' });
+
+      if (error) {
+        alert('Failed to save guest.');
+        return;
+      }
+
+      guestLinkInput.value = buildGuestLink(slug);
+      loadGuests();
+      alert('Saved successfully.');
+    });
+
+    copyLinkBtn.addEventListener('click', async () => {
+      if (!guestLinkInput.value) return;
+      await navigator.clipboard.writeText(guestLinkInput.value);
+      alert('Copied.');
+    });
+
+    loadGuests();
+  </script>
+</body>
+</html>
