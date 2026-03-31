@@ -195,30 +195,35 @@ function addToCalendar() {
 
 /* ===== MUSIC ===== */
 function toggleMusic() {
-  if (!music || !audioBtn) return;
+  if (!music) return;
 
   if (musicPlaying) {
     music.pause();
-    audioBtn.innerHTML = '<i class="fas fa-volume-mute" aria-hidden="true"></i>';
-    audioBtn.title = 'Bật/tắt nhạc nền';
-    audioBtn.setAttribute('aria-label', 'Bật nhạc nền');
-    audioBtn.setAttribute('aria-pressed', 'false');
+
+    if (audioBtn) {
+      audioBtn.innerHTML = '<i class="fas fa-volume-mute" aria-hidden="true"></i>';
+      audioBtn.title = 'Toggle background music';
+      audioBtn.setAttribute('aria-label', 'Turn on background music');
+      audioBtn.setAttribute('aria-pressed', 'false');
+    }
+
     musicPlaying = false;
-    showToast('🔇 Đã tắt nhạc nền');
     return;
   }
 
   music.play()
     .then(() => {
-      audioBtn.innerHTML = '<i class="fas fa-volume-up" aria-hidden="true"></i>';
-      audioBtn.title = 'Bật/tắt nhạc nền';
-      audioBtn.setAttribute('aria-label', 'Tắt nhạc nền');
-      audioBtn.setAttribute('aria-pressed', 'true');
+      if (audioBtn) {
+        audioBtn.innerHTML = '<i class="fas fa-volume-up" aria-hidden="true"></i>';
+        audioBtn.title = 'Toggle background music';
+        audioBtn.setAttribute('aria-label', 'Turn off background music');
+        audioBtn.setAttribute('aria-pressed', 'true');
+      }
+
       musicPlaying = true;
-      showToast('🎵 Đang phát nhạc nền');
     })
     .catch(() => {
-      showToast('Không thể phát nhạc. Vui lòng thử lại.');
+      musicPlaying = false;
     });
 }
 
@@ -414,21 +419,32 @@ document.addEventListener('DOMContentLoaded', () => {
   initGuestInput();
   initMessageCounter();
 
-  if (music && audioBtn) {
+  if (music) {
+    music.volume = 0.6;
+
+    const startMusicOnce = () => {
+      if (musicPlaying) return;
+
+      music.play()
+        .then(() => {
+          musicPlaying = true;
+        })
+        .catch(() => {
+          musicPlaying = false;
+        });
+    };
+
     music.play()
       .then(() => {
-        audioBtn.innerHTML = '<i class="fas fa-volume-up" aria-hidden="true"></i>';
-        audioBtn.title = 'Toggle background music';
-        audioBtn.setAttribute('aria-label', 'Turn off background music');
-        audioBtn.setAttribute('aria-pressed', 'true');
         musicPlaying = true;
       })
       .catch(() => {
-        musicPlaying = false;
+        document.addEventListener('click', startMusicOnce, { once: true });
+        document.addEventListener('touchstart', startMusicOnce, { once: true });
+        document.addEventListener('keydown', startMusicOnce, { once: true });
       });
   }
 });
-
 /* ===== EXPOSE GLOBALS FOR INLINE HTML HANDLERS ===== */
 window.toggleFaq = toggleFaq;
 window.copyIban = copyIban;
